@@ -1,6 +1,6 @@
 # PiCo contactsurvey
 
-This repository contains the code developed and used for the analysis of the PIENTER3 and PiCo contactsurveys study in the Netherlands, as described in ["Contact behaviour before, during and after the COVID-19 pandemic in the Netherlands: evidence from contact surveys in 2016-2017 and 2020-2023"](https://www.medrxiv.org/content/10.1101/??), by [Jantien A Backer](mailto:jantien.backer@rivm.nl), Eric Vos, Gerco den Hartog, Cheyenne van Hagen, Hester de Melker, Fiona van der Klis and Jacco Wallinga. 
+This repository contains the code developed and used for the analysis of the PIENTER3 and PiCo contactsurveys study in the Netherlands, as described in ["Contact behaviour before, during and after the COVID-19 pandemic in the Netherlands: evidence from contact surveys in 2016-2017 and 2020-2023"](https://medrxiv.org/cgi/content/short/2024.03.06.24303851v1), by [Jantien A Backer](mailto:jantien.backer@rivm.nl), Eric Vos, Gerco den Hartog, Cheyenne van Hagen, Hester de Melker, Fiona van der Klis and Jacco Wallinga. 
 
 The repository consists of:
 
