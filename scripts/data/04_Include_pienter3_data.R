@@ -48,6 +48,10 @@ p3_data <- p3_data %>%
   # 8 = University level education
   mutate(educationparent = pmax(educationparent1, educationparent2, na.rm = TRUE),
          education = coalesce(education, educationparent)) %>%
+  # employment not categorized but open text fields
+  mutate(employment = job,
+         employment_caretaker1 = jobparents1,
+         employment_caretaker2 = jobparents2) %>% 
   mutate(hh_size_reported = household) %>% 
   mutate(part_weight = coalesce(childweight, weight),
          part_height = coalesce(childlength, howtall)) %>% 

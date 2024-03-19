@@ -119,8 +119,23 @@ pico_data <- pico_data %>%
          opleidingvrzg2 = if_else(opleidingvrzg2 > 8, NA_integer_, opleidingvrzg2),
          opleidingvrzg = pmax(opleidingvrzg1, opleidingvrzg2, na.rm = TRUE),
          education = coalesce(opleidingdlnr, opleidingvrzg)) %>% 
-  # in pico 1 and 2 employment definitions are different from pico 3 onwards: set to NA and later infer
-  # (this will only affect 12 participants)
+  # in pico 1 and 2: In welke sector bent u werkzaam?
+  # 1=Niet van toepassing, ik werk niet (meer)
+  # 2=Niet van toepassing, ik ben scholier of student
+  # 3=Gezondheidszorg
+  # 4=Ander werk dan gezondheidszorg met fysiek contact met klanten (bijv. kapper, schoonheidsspecialiste)
+  # 5=Jeugdhulp, (maatschappelijke) ondersteuning
+  # 6=Onderwijs
+  # 7=Kinderopvang
+  # 8=Horeca
+  # 9=Voedselketen: de voedselketen moet breed worden gezien (supermarkten)
+  # 10=Detailhandel
+  # 11=Openbaar vervoer
+  # 12=Transport brandstoffen en vervoer van afval
+  # 13=Hulpverleningsdiensten (meldkamerprocessen, brandweer, ambulance,  GHOR, crisisbeheersing veiligheidsregio's)
+  # 14=Media en communicatie
+  # 15=Noodzakelijke overheidsprocessen (Rijk, provincie en gemeente)
+  # 16=Anders  
   # from pico 3 onwards: In welke werkveld bent u werkzaam?
   # 1=(Gezondheids)zorg
   # 2=Ander werk dan gezondheidszorg met lichamelijk contact met klanten (o.a. kapper, schoonheidsspecialiste, pedi-/manicure, masseur, tatoeëerder/piercer, rijinstructeur)
@@ -143,9 +158,10 @@ pico_data <- pico_data %>%
   # 19=Andere sector, vul vraag 6a in
   # 30=Niet van toepassing, ik werk niet (meer) (ga verder bij vraag 8)
   # 31=Niet van toepassing, ik ben scholier of student (ga verder bij vraag 8)
-mutate(employment = if_else(pico >= 3, werksectdlnr, NA),
-       employment_caretaker1 = if_else(pico >= 3, werksectvrzg1, NA),
-       employment_caretaker2 = if_else(pico >= 3, werksectvrzg2, NA)) %>% 
+  # numerics converted to character to be able to combine with open text fields in p3 data
+mutate(employment = as.character(werksectdlnr),
+       employment_caretaker1 = as.character(werksectvrzg1),
+       employment_caretaker2 = as.character(werksectvrzg2)) %>% 
   # set !participant_withhh when hh composition (excl participant) is not reported and hh size is not 1
   mutate(huishoud_grootte = rowSums(!is.na(across(starts_with("leeftijdhg"))), na.rm = TRUE),
          participant_withhh = !(huishoud_grootte == 0 & (hh_size_reported != 1 | is.na(hh_size_reported))))
