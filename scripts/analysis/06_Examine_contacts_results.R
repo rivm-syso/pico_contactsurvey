@@ -74,7 +74,7 @@ ggplot(data = results_byage %>% filter(type == "community", sample == "general",
   facet_wrap(facets = vars(part_age_group)) +
   inset_element(inset, left = 0.53, right = 0.75, bottom = 0.05, top = 0.23)
 
-ggsave(filename = "./figures/Contacts_byagegroup.png", height = 6, width = 10, dpi = 300)
+ggsave(filename = "./figures/Contacts_byagegroup.pdf", height = 6, width = 10, dpi = 300)
 
 
 # Summary results by round (with bias-corrected bootstrap intervals)
@@ -132,21 +132,19 @@ results_strat <- results_fullpop %>%
 ggplot(data = results_strat %>% filter(round > 0),
        # plot m_obs variables (because subgroups do not necessarily mix reciprocally within group)
        # here m_smt = m_obs (because of symmetrisation method)
-       aes(x = round, y = m_obs, ymin = m_obs_lower, ymax = m_obs_upper, col = sample)) +
+       aes(x = date_median, y = m_obs, ymin = m_obs_lower, ymax = m_obs_upper, col = sample)) +
   geom_segment(data = results_strat %>% filter(round == 0) %>% mutate(Baseline = TRUE),
-               aes(x = 0, xend = 11, yend = m_obs, lty = Baseline)) +
-  geom_pointrange(position = position_dodge(width = 0.5)) +
-  scale_x_continuous(
-    breaks = 1:10,
-    minor_breaks = 1:10) +
+               aes(x = as.Date("2020-01-01"), xend = as.Date("2023-06-30"), yend = m_obs, lty = Baseline)) +
+  geom_pointrange(position = position_dodge(width = 28)) +
+  scale_x_date(limits = c(as.Date("2020-01-01"), as.Date("2023-06-30")),
+               expand = expansion(c(0, 0))) +
   scale_y_continuous(limits = c(0, NA),
                      expand = expansion(c(0, 0.02))) +
   scale_color_manual(values = c('#bae4bc','#7bccc4','#2b8cbe')) +
   scale_fill_manual(values = c('#bae4bc','#7bccc4','#2b8cbe')) +
   scale_linetype_manual(values = 2,
                         labels = c("")) +
-  coord_cartesian(xlim = c(0.5, 10.5)) +
-  labs(x = "Survey round",
+  labs(x = NULL,
        y = "Average number of community contacts pppd\n(if full population consisted of a single stratum)",
        color = "Stratum") +
   theme_light() +
@@ -155,6 +153,5 @@ ggplot(data = results_strat %>% filter(round > 0),
   facet_wrap(facets = vars(sample2),
              ncol = 1)
 
-ggsave(filename = "./figures/Contacts_edu_med.png", height = 7, width = 7, dpi = 300)
-
+ggsave(filename = "./figures/Contacts_edu_med.pdf", height = 7, width = 7, dpi = 300)
 

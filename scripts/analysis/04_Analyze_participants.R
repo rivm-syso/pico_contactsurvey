@@ -120,6 +120,89 @@ participants_table <- bind_rows(
 
 saveRDS(participants_table, "./results/participants_table.rds")
 
+# Full participant table (including n)
+
+part_table <- bind_rows(
+  "Total" = tmp_part %>% 
+    group_by(round) %>% 
+    count() %>% 
+    mutate(var = ""),
+  "Participant age group" = tmp_part %>% 
+    rename(var = part_age_group) %>% 
+    group_by(round, var) %>% 
+    count(),
+  "Participant sex" = tmp_part %>% 
+    mutate(part_gender = fct_recode(part_gender, Female = "F", Male = "M")) %>% 
+    rename(var = part_gender) %>% 
+    group_by(round, var) %>% 
+    count(),
+  "Household size" = tmp_part %>% 
+    mutate(hh_size = if_else(participant_withhh, hh_size, NA)) %>% 
+    rename(var = hh_size) %>% 
+    group_by(round, var) %>% 
+    count(),
+  "Medical risk group" = tmp_part %>% 
+    rename(var = medical_risk) %>% 
+    group_by(round, var) %>% 
+    count(),
+  "Education level" = tmp_part %>% 
+    rename(var = education_level) %>% 
+    group_by(round, var) %>% 
+    count(),
+  .id = "name") %>% 
+  group_by(round, name, .drop = FALSE) %>% 
+  mutate(perc = 100*n/sum(n),
+         n = as.character(n),
+         var = if_else(is.na(var), "(Missing)", var),
+         rank = 1:n(),
+         perc = sprintf("%0.1f", perc)) %>% 
+  select(round, name, rank, var, n, perc) %>% 
+  pivot_wider(names_from = round, values_from = c(n, perc), names_vary = "slowest") |> 
+  replace_na(replace = as.list(c(setNames(rep("0.0", 11), paste0("perc_", 0:10)),
+                                 setNames(rep("0", 11), paste0("n_", 0:10))))) 
+
+
+participants_table <- bind_rows(
+  # first line with survey rounds to be used as header
+  tibble(round = 0:10) %>% 
+    mutate(n = as.character(round),
+           perc = "",
+           name = "Survey round",
+           var = "") %>%
+    pivot_wider(names_from = round, values_from = c(n, perc), names_vary = "slowest"),
+  # second line with survey months per pico round
+  round_dates %>%
+    mutate(survey_month = format(round_date(date_median, unit = "month"), "%b"),
+           survey_month = if_else(round == 0, "", survey_month),
+           survey_year = format(round_date(date_median, unit = "month"), "%Y"),
+           survey_year = if_else(round == 0, "", survey_year)) %>%
+    arrange(round) %>%
+    select(round, survey_month, survey_year) %>%
+    transmute(round = round,
+              name = "Survey month",
+              var = "",
+              n = survey_month,
+              perc = survey_year) %>%
+    pivot_wider(names_from = round, values_from = c(n, perc), names_vary = "slowest"),
+  # third line with alternating n and %
+  tibble(round = 0:10) |> 
+    mutate(n = "n",
+           perc = "%",
+           name = "",
+           var = "") %>%
+    pivot_wider(names_from = round, values_from = c(n, perc), names_vary = "slowest"),
+  # rest of table are n and percentages for total and per variable per survey round
+  part_table %>% 
+    full_join(reference_table) %>% 
+    mutate(name = if_else(rank == 1, name, "")) %>% 
+    select(-rank)
+) %>% 
+  replace_na(replace = list(ref = "")) %>% 
+  mutate(ref = if_else(name == "Survey round", "ref", ref))
+
+
+writexl::write_xlsx(participants_table, "./results/participants_full_table.xlsx", col_names = FALSE)
+
 
 # Figure medical risk
 
@@ -183,7 +266,7 @@ plot_grid(fig_medical,
           rel_heights = c(1, -0.1, 1),
           ncol = 1)
 
-ggsave(filename = paste0("./figures/Participants.png"), height = 7, width = 7, dpi = 300, bg = "white")
+ggsave(filename = paste0("./figures/Participants.pdf"), height = 7, width = 7, dpi = 300, bg = "white")
 
 
 
