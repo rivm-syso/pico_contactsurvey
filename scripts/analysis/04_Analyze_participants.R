@@ -201,7 +201,7 @@ participants_table <- bind_rows(
   mutate(ref = if_else(name == "Survey round", "ref", ref))
 
 
-writexl::write_xlsx(participants_table, "./results/participants_full_table.xlsx", col_names = FALSE)
+write_xlsx(participants_table, "./results/participants_full_table.xlsx", col_names = FALSE)
 
 
 # Figure medical risk
@@ -266,7 +266,7 @@ plot_grid(fig_medical,
           rel_heights = c(1, -0.1, 1),
           ncol = 1)
 
-ggsave(filename = paste0("./figures/Participants.pdf"), height = 7, width = 7, dpi = 300, bg = "white")
+ggsave(filename = paste0("./figures/Participants.png"), height = 7, width = 7, dpi = 300, bg = "white")
 
 
 

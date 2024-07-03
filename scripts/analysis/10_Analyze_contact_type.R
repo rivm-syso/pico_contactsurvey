@@ -43,7 +43,7 @@ contacts %>%
        fill = "Contact type") +
   theme_minimal()
 
-ggsave(filename = "./figures/Contacttypes.png", height = 4, width = 7, dpi = 300, bg = "white")
+# ggsave(filename = "./figures/Contacttypes.png", height = 4, width = 7, dpi = 300, bg = "white")
 
 
 contacts %>% 

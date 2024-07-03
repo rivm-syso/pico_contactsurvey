@@ -8,7 +8,7 @@ The repository consists of:
 
 * `R`: functions used in analysis script
 
-* `figures`: figures produced by analysis script
+* `figures`: figures produced by analysis script, as shown in manuscript and supplementary material
 
 All code has been written in the programming language [R](https://www.r-project.org/about.html); see [Requirements](#requirements) for detailed specification.
 

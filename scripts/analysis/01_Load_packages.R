@@ -11,6 +11,7 @@ library(patchwork)
 library(ISOweek)
 library(RColorBrewer)
 library(cbsodataR)
+library(writexl)
 
 # Source functions
 list.files(path = "./R", full.names = TRUE) %>% walk(.f = source)

@@ -74,7 +74,7 @@ ggplot(data = results_byage %>% filter(type == "community", sample == "general",
   facet_wrap(facets = vars(part_age_group)) +
   inset_element(inset, left = 0.53, right = 0.75, bottom = 0.05, top = 0.23)
 
-ggsave(filename = "./figures/Contacts_byagegroup.pdf", height = 6, width = 10, dpi = 300)
+ggsave(filename = "./figures/Contacts_byagegroup.png", height = 6, width = 10, dpi = 300)
 
 
 # Summary results by round (with bias-corrected bootstrap intervals)
@@ -153,5 +153,5 @@ ggplot(data = results_strat %>% filter(round > 0),
   facet_wrap(facets = vars(sample2),
              ncol = 1)
 
-ggsave(filename = "./figures/Contacts_edu_med.pdf", height = 7, width = 7, dpi = 300)
+ggsave(filename = "./figures/Contacts_edu_med.png", height = 7, width = 7, dpi = 300)
 
